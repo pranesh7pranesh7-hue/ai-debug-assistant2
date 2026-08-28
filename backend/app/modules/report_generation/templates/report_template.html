@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BugSense AI Analysis Audit Report - {{ filename }}</title>
+    <style>
+        :root {
+            --bg-primary: #0f172a;
+            --bg-card: #1e293b;
+            --text-primary: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+            --accent: #6366f1;
+            --critical: #ef4444;
+            --high: #f97316;
+            --medium: #eab308;
+            --low: #3b82f6;
+            --info: #64748b;
+        }
+        @media print {
+            .no-print { display: none !important; }
+            body { background: #ffffff !important; padding: 0 !important; }
+            .container { box-shadow: none !important; padding: 0 !important; max-width: 100% !important; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="no-print" style="margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center; background: #1e293b; padding: 14px 20px; border-radius: 8px; color: #fff;">
+            <div>
+                <strong>BugSense AI Audit Report</strong> &bull; Printable & PDF-Ready
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <button onclick="window.print()" style="background: #6366f1; color: #fff; border: none; padding: 8px 18px; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 13px;">
+                    🖨️ Print / Save as PDF
+                </button>
+                <button onclick="window.close()" style="background: #334155; color: #fff; border: none; padding: 8px 14px; border-radius: 6px; cursor: pointer; font-size: 13px;">
+                    ✕ Close
+                </button>
+            </div>
+        </div>
+
+        <div class="header">
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header h1 {
+            margin: 0;
+            color: #1e293b;
+            font-size: 26px;
+        }
+        .meta-pill {
+            background: #e0e7ff;
+            color: #4338ca;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        .stat-box {
+            background: #f1f5f9;
+            padding: 16px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+        }
+        .stat-val {
+            font-size: 28px;
+            font-weight: 700;
+            color: #0f172a;
+        }
+        .stat-label {
+            font-size: 12px;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 4px;
+        }
+        .section-title {
+            font-size: 20px;
+            color: #1e293b;
+            margin-top: 30px;
+            margin-bottom: 16px;
+            border-left: 4px solid var(--accent);
+            padding-left: 10px;
+        }
+        .bug-card {
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 18px;
+            margin-bottom: 15px;
+            background: #ffffff;
+        }
+        .bug-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .badge {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 700;
+            color: #ffffff;
+        }
+        .badge-Critical { background-color: var(--critical); }
+        .badge-High { background-color: var(--high); }
+        .badge-Medium { background-color: var(--medium); color: #000; }
+        .badge-Low { background-color: var(--low); }
+        .badge-Info { background-color: var(--info); }
+
+        pre {
+            background: #1e293b;
+            color: #f8fafc;
+            padding: 14px;
+            border-radius: 6px;
+            font-size: 13px;
+            overflow-x: auto;
+        }
+        .diff-text {
+            background: #0f172a;
+            color: #a5f3fc;
+            padding: 12px;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 12px;
+            white-space: pre-wrap;
+        }
+        .footer {
+            margin-top: 40px;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 15px;
+            text-align: center;
+            font-size: 12px;
+            color: #94a3b8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div>
+                <h1>🛡️ BugSense AI Analysis Report</h1>
+                <div style="color: #64748b; font-size: 14px; margin-top: 4px;">File: <strong>{{ filename }}</strong> &bull; Generated: {{ timestamp }}</div>
+            </div>
+            <div class="meta-pill">Submission #{{ submission_id }}</div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-box">
+                <div class="stat-val">{{ total_bugs }}</div>
+                <div class="stat-label">Total Bugs</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-val" style="color: var(--critical);">{{ critical_count }}</div>
+                <div class="stat-label">Critical Issues</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-val" style="color: #10b981;">{{ auto_fixed_count }}</div>
+                <div class="stat-label">Auto-Fixed</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-val">{{ complexity_score }}</div>
+                <div class="stat-label">Avg Complexity</div>
+            </div>
+        </div>
+
+        <div class="section-title">Detected Bugs & AI Diagnostics</div>
+        {% for bug in bugs %}
+        <div class="bug-card">
+            <div class="bug-card-header">
+                <div>
+                    <span class="badge badge-{{ bug.severity }}">{{ bug.severity }}</span>
+                    <strong style="margin-left: 8px;">Line {{ bug.line }}</strong> &bull; <span style="color: #64748b;">{{ bug.rule_id }} ({{ bug.tool }})</span>
+                </div>
+                <div style="font-weight: 600; color: #475569;">Score: {{ bug.severity_score }}/100</div>
+            </div>
+            <div style="font-size: 14px; margin-bottom: 8px;"><strong>Issue:</strong> {{ bug.message }}</div>
+            {% if bug.explanation %}
+            <div style="background: #f8fafc; border-left: 3px solid #6366f1; padding: 10px; border-radius: 4px; font-size: 13px; color: #334155; margin-top: 8px;">
+                <strong>AI Root Cause Analysis:</strong><br/>
+                {{ bug.explanation | replace("\n", "<br/>") | safe }}
+            </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+
+        {% if auto_fixed_count > 0 %}
+        <div class="section-title">Verified Auto-Fix Diffs</div>
+        {% for fix in verified_fixes %}
+        <div class="bug-card">
+            <div style="font-weight: 600; margin-bottom: 6px;">Fix for {{ fix.rule_id }} (Line {{ fix.line }})</div>
+            <div style="font-size: 13px; color: #475569; margin-bottom: 8px;"><em>Rationale: {{ fix.rationale }}</em></div>
+            <div class="diff-text">{{ fix.diff_text }}</div>
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        <div class="footer">
+            Generated autonomously by BugSense AI LLM-Based Automated Code Debugging Assistant
+        </div>
+    </div>
+</body>
+</html>

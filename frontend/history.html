@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BugSense AI — Analysis History</title>
+  <link rel="stylesheet" href="assets/css/base.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+  <link rel="stylesheet" href="assets/css/dashboard.css">
+</head>
+<body>
+  <!-- Navigation Header -->
+  <nav class="navbar">
+    <div class="app-container nav-wrapper">
+      <a href="index.html" class="brand">
+        <div class="brand-icon">🛡️</div>
+        <span>BugSense AI</span>
+      </a>
+      <ul class="nav-links">
+        <li class="nav-item"><a href="index.html">Dashboard</a></li>
+        <li class="nav-item"><a href="upload.html">Upload Code</a></li>
+        <li class="nav-item"><a href="history.html" class="active">History</a></li>
+        <li class="nav-item"><a href="javascript:void(0)" id="logout-link" style="color: var(--severity-critical);">Logout</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main class="main-content">
+    <div class="app-container">
+      
+      <div style="margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center;">
+        <div>
+          <h2>Submissions & Audit History</h2>
+          <p style="color: var(--text-secondary); font-size: 14px;">
+            Past Python code submissions, analysis snapshots, and generated patches.
+          </p>
+        </div>
+        <a href="upload.html" class="btn btn-primary btn-sm">+ Upload New File</a>
+      </div>
+
+      <div class="card">
+        <div id="history-loading" style="color: var(--text-muted); font-size: 14px; padding: 20px;">
+          <span class="spinner"></span> Loading analysis history...
+        </div>
+
+        <table class="recent-table" id="history-table">
+          <thead>
+            <tr>
+              <th>Filename</th>
+              <th>Language</th>
+              <th>Lines of Code</th>
+              <th>Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="history-table-body"></tbody>
+        </table>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="app-container">
+      BugSense AI — Automated Code Debugging & Agentic Patching Assistant
+    </div>
+  </footer>
+
+  <script type="module">
+    import { logout } from './assets/js/auth.js';
+    import { initHistoryPage } from './assets/js/history.js';
+
+    document.getElementById('logout-link').addEventListener('click', logout);
+    initHistoryPage();
+  </script>
+</body>
+</html>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BugSense AI — Bug Report & Diagnostics</title>
+  <link rel="stylesheet" href="assets/css/base.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+  <link rel="stylesheet" href="assets/css/report.css">
+</head>
+<body>
+  <!-- Navigation Header -->
+  <nav class="navbar">
+    <div class="app-container nav-wrapper">
+      <a href="index.html" class="brand">
+        <div class="brand-icon">🛡️</div>
+        <span>BugSense AI</span>
+      </a>
+      <ul class="nav-links">
+        <li class="nav-item"><a href="index.html">Dashboard</a></li>
+        <li class="nav-item"><a href="upload.html">Upload Code</a></li>
+        <li class="nav-item"><a href="history.html">History</a></li>
+        <li class="nav-item"><a href="javascript:void(0)" id="logout-link" style="color: var(--severity-critical);">Logout</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main class="main-content">
+    <div class="app-container">
+      
+      <!-- Report Header -->
+      <div class="report-header">
+        <div>
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <h2>Audit Report: <span id="report-filename" style="color: var(--accent-cyan);">script.py</span></h2>
+          </div>
+          <p style="color: var(--text-secondary); font-size: 13px; margin-top: 4px;">
+            Comprehensive static analysis, AST semantic diagnostics, and AI-recommended patches.
+          </p>
+        </div>
+
+        <div style="display: flex; gap: 10px;">
+          <button id="start-agentic-btn" class="btn btn-primary btn-sm">
+            🤖 Run Autonomous Agentic Debugger
+          </button>
+          <button id="download-pdf-btn" class="btn btn-secondary btn-sm">
+            📥 Download Report (PDF/HTML)
+          </button>
+        </div>
+      </div>
+
+      <!-- Quick Summary Pills -->
+      <div style="display: flex; gap: 16px; margin-bottom: 24px; flex-wrap: wrap;">
+        <div class="card" style="padding: 12px 20px; display: flex; align-items: center; gap: 10px;">
+          <span style="color: var(--text-muted); font-size: 13px;">Total Detected:</span>
+          <strong id="stat-total-bugs" style="font-size: 16px; color: #ffffff;">—</strong>
+        </div>
+        <div class="card" style="padding: 12px 20px; display: flex; align-items: center; gap: 10px;">
+          <span style="color: var(--text-muted); font-size: 13px;">Critical Bugs:</span>
+          <strong id="stat-critical" style="font-size: 16px; color: var(--severity-critical);">—</strong>
+        </div>
+        <div class="card" style="padding: 12px 20px; display: flex; align-items: center; gap: 10px;">
+          <span style="color: var(--text-muted); font-size: 13px;">High Severity:</span>
+          <strong id="stat-high" style="font-size: 16px; color: var(--severity-high);">—</strong>
+        </div>
+      </div>
+
+      <!-- Agentic Loop Live Tracker Container -->
+      <div id="agentic-tracker-container" class="card" style="margin-bottom: 24px; display: none;"></div>
+
+      <!-- 2-Column Bug Workspace Grid -->
+      <div class="report-grid">
+        
+        <!-- Left: Bug List -->
+        <div>
+          <h3 style="font-size: 18px; margin-bottom: 14px;">Detected Issues & Findings</h3>
+          <div id="bug-list-container">
+            <div style="color: var(--text-muted); padding: 20px;">Loading diagnostic findings...</div>
+          </div>
+        </div>
+
+        <!-- Right: Detail Drawer & AI Pair Debugger -->
+        <div>
+          <div id="drawer-container" class="detail-drawer">
+            <div style="color: var(--text-muted); padding: 40px; text-align: center;">
+              Select an issue from the left panel to inspect root-cause analysis and generate verified patches.
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="app-container">
+      BugSense AI — Automated Code Debugging & Agentic Patching Assistant
+    </div>
+  </footer>
+
+  <script type="module">
+    import { logout } from './assets/js/auth.js';
+    import { initReportPage } from './assets/js/report.js';
+
+    document.getElementById('logout-link').addEventListener('click', logout);
+    initReportPage();
+  </script>
+</body>
+</html>

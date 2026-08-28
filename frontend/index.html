@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BugSense AI — Developer Dashboard</title>
+  <link rel="stylesheet" href="assets/css/base.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+  <link rel="stylesheet" href="assets/css/dashboard.css">
+</head>
+
+<body>
+  <!-- Navigation Header -->
+  <nav class="navbar">
+    <div class="app-container nav-wrapper">
+      <a href="index.html" class="brand">
+        <div class="brand-icon">🛡️</div>
+        <span>BugSense AI</span>
+      </a>
+      <ul class="nav-links">
+        <li class="nav-item"><a href="index.html" class="active">Dashboard</a></li>
+        <li class="nav-item"><a href="upload.html">Upload Code</a></li>
+        <li class="nav-item"><a href="history.html">History</a></li>
+        <li class="nav-item"><a href="javascript:void(0)" id="logout-link"
+            style="color: var(--severity-critical);">Logout</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main class="main-content">
+    <div class="app-container">
+
+      <!-- Hero Banner -->
+      <div class="hero-banner">
+        <div class="hero-text">
+          <h1>Automated Code Debugging</h1>
+          <p>
+            Static AST analysis, OWASP security scanning, and autonomous agentic patch generation — reducing debugging
+            time from hours to seconds.
+          </p>
+          <div style="margin-top: 20px; display: flex; gap: 12px;">
+            <a href="upload.html" class="btn btn-primary">⚡ Scan New Code</a>
+            <a href="history.html" class="btn btn-secondary">📜 View Past Reports</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Stats Overview -->
+      <div class="stats-overview">
+        <div class="stat-card">
+          <div class="stat-icon" style="background: rgba(99, 102, 241, 0.15); color: var(--accent-primary);">🐞</div>
+          <div class="stat-info">
+            <div class="stat-number" id="dash-total-bugs">14</div>
+            <div class="stat-title">Total Bugs Detected</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background: rgba(16, 185, 129, 0.15); color: var(--accent-emerald);">🤖</div>
+          <div class="stat-info">
+            <div class="stat-number" id="dash-auto-fixed" style="color: var(--accent-emerald);">11</div>
+            <div class="stat-title">Auto-Fixed in Sandbox</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background: rgba(244, 63, 94, 0.15); color: var(--severity-critical);">🔥</div>
+          <div class="stat-info">
+            <div class="stat-number" id="dash-critical-issues" style="color: var(--severity-critical);">3</div>
+            <div class="stat-title">Critical Vulnerabilities</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background: rgba(6, 182, 212, 0.15); color: var(--accent-cyan);">⏱️</div>
+          <div class="stat-info">
+            <div class="stat-number" style="color: var(--accent-cyan);">94%</div>
+            <div class="stat-title">Avg Debug Time Saved</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dashboard 2-column Grid -->
+      <div class="dashboard-grid">
+
+        <!-- Left: Recent Analyses Table -->
+        <div class="card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+            <h3>Recent Code Analyses</h3>
+            <a href="history.html" style="font-size: 13px;">View All &rarr;</a>
+          </div>
+
+          <div id="dash-loading" style="color: var(--text-muted); font-size: 13px;">Loading submissions...</div>
+          <table class="recent-table" id="dash-table" style="display: none;">
+            <thead>
+              <tr>
+                <th>File Name</th>
+                <th>Hash</th>
+                <th>Date</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="dash-table-body"></tbody>
+          </table>
+        </div>
+
+        <!-- Right: Instant Quick Scanner Widget -->
+        <div class="card" id="quick-scan-card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <h3>⚡ Quick Scan Widget</h3>
+            <span class="badge-severity badge-Info" style="font-size: 11px;">Multi-Language</span>
+          </div>
+          <p style="font-size: 13px; color: var(--text-secondary); margin-top: 4px; margin-bottom: 12px;">
+            Paste code in Python, C, C++, Java, JS, Go, Rust, or SQL for instant static and AI analysis.
+          </p>
+
+          <div style="margin-bottom: 12px;">
+            <select id="quick-lang-select" class="form-select" style="font-size: 13px; padding: 7px 12px;">
+              <option value="auto">🌐 Auto-Detect Language</option>
+              <option value="Python">🐍 Python (.py)</option>
+              <option value="C">🇨 C (.c)</option>
+              <option value="C++">➕ C++ (.cpp)</option>
+              <option value="Java">☕ Java (.java)</option>
+              <option value="JavaScript">🟨 JavaScript (.js)</option>
+              <option value="TypeScript">🔷 TypeScript (.ts)</option>
+              <option value="Go">🐹 Go (.go)</option>
+              <option value="Rust">🦀 Rust (.rs)</option>
+              <option value="C#">🔷 C# (.cs)</option>
+              <option value="PHP">🐘 PHP (.php)</option>
+              <option value="Ruby">💎 Ruby (.rb)</option>
+              <option value="SQL">🗄️ SQL (.sql)</option>
+              <option value="Shell">🐚 Shell / Bash (.sh)</option>
+            </select>
+          </div>
+
+          <textarea id="quick-code-area" class="form-textarea" rows="7"
+            placeholder="// Paste your C, C++, Java, JavaScript, Python, Go, or SQL code here..."></textarea>
+
+          <button id="quick-scan-btn" class="btn btn-primary" style="width: 100%; margin-top: 14px;">
+            Run Instant Multi-Language Scan
+          </button>
+
+          <!-- Error Notification Display Box (Hidden by default) -->
+          <div id="quick-error-container" class="quick-error-box" style="display: none;"></div>
+
+          <!-- Instant In-Widget Results Display Container (Hidden by default) -->
+          <div id="quick-results-container" class="quick-results-wrapper" style="display: none;"></div>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="app-container">
+      BugSense AI — Automated Code Debugging & Agentic Patching Assistant
+    </div>
+  </footer>
+
+  <script type="module">
+    import { apiRequest } from './assets/js/api.js';
+    import { requireAuth, logout } from './assets/js/auth.js';
+    import {
+      formatDate,
+      showToast,
+      escapeHtml,
+      normalizePythonCode,
+      getLineSnippet,
+      generateSyntaxExplanations,
+    } from './assets/js/utils.js';
+    import { renderSeverityBadge, renderScorePill } from './assets/js/severityBadges.js';
+
+    requireAuth();
+
+    document.getElementById('logout-link').addEventListener('click', logout);
+
+    // Load recent submissions
+    async function loadDashboard() {
+      try {
+        const subs = await apiRequest('/upload/history');
+        const loadingEl = document.getElementById('dash-loading');
+        if (loadingEl) loadingEl.style.display = 'none';
+        const table = document.getElementById('dash-table');
+        const tbody = document.getElementById('dash-table-body');
+
+        if (subs && subs.length > 0) {
+          table.style.display = 'table';
+          tbody.innerHTML = subs.slice(0, 5).map(s => `
+            <tr>
+              <td><strong>${escapeHtml(s.filename)}</strong></td>
+              <td><code>${escapeHtml(s.source_hash.substring(0, 8))}...</code></td>
+              <td>${formatDate(s.uploaded_at)}</td>
+              <td><a href="report.html?id=${s.id}" class="btn btn-primary btn-sm">Audit Report</a></td>
+            </tr>
+          `).join('');
+        } else {
+          if (loadingEl) {
+            loadingEl.style.display = 'block';
+            loadingEl.textContent = 'No submissions yet. Use the Quick Scan widget or Upload page!';
+          }
+        }
+      } catch (err) {
+        const loadingEl = document.getElementById('dash-loading');
+        if (loadingEl) loadingEl.textContent = 'Failed to load dashboard data.';
+      }
+    }
+
+    // Elements
+    const quickBtn = document.getElementById('quick-scan-btn');
+    const quickArea = document.getElementById('quick-code-area');
+    const errorContainer = document.getElementById('quick-error-container');
+    const resultsContainer = document.getElementById('quick-results-container');
+
+    function hideQuickError() {
+      if (errorContainer) {
+        errorContainer.style.display = 'none';
+        errorContainer.innerHTML = '';
+      }
+    }
+
+    function hideQuickResults() {
+      if (resultsContainer) {
+        resultsContainer.style.display = 'none';
+        resultsContainer.innerHTML = '';
+      }
+    }
+
+    function showQuickError(errorInfo) {
+      if (!errorContainer) return;
+      errorContainer.style.display = 'block';
+
+      if (errorInfo.type === 'syntax') {
+        errorContainer.innerHTML = `
+          <div class="quick-error-header">
+            <span>⚠️</span>
+            <span>${escapeHtml(errorInfo.title || 'Python Syntax Error')}</span>
+          </div>
+          <div class="quick-error-body">
+            <strong>${escapeHtml(errorInfo.message)}</strong>
+          </div>
+          ${errorInfo.codeSnippet ? `
+            <pre class="quick-error-snippet"><code>Line ${errorInfo.line}: ${escapeHtml(errorInfo.codeSnippet)}</code></pre>
+          ` : ''}
+          ${errorInfo.rootCause ? `
+            <div style="margin-top: 8px; font-size: 12px; color: #cbd5e1;">
+              <strong>Root Cause:</strong> ${escapeHtml(errorInfo.rootCause)}
+            </div>
+          ` : ''}
+          ${errorInfo.fixGuidance ? `
+            <div class="quick-error-fix">
+              <strong>Recommended Fix:</strong> ${escapeHtml(errorInfo.fixGuidance)}
+            </div>
+          ` : ''}
+        `;
+      } else {
+        errorContainer.innerHTML = `
+          <div class="quick-error-header">
+            <span>⚠️</span>
+            <span>${escapeHtml(errorInfo.title || 'Notice')}</span>
+          </div>
+          <div class="quick-error-body">${escapeHtml(errorInfo.message)}</div>
+          ${errorInfo.guidance ? `
+            <div class="quick-error-fix">${escapeHtml(errorInfo.guidance)}</div>
+          ` : ''}
+        `;
+      }
+    }
+
+    function renderQuickResults(reportData, sourceCode) {
+      if (!resultsContainer) return;
+      resultsContainer.style.display = 'block';
+
+      const totalBugs = reportData.total_bugs || 0;
+      const bugs = reportData.bugs || [];
+      const submissionId = reportData.submission_id;
+
+      if (totalBugs === 0) {
+        resultsContainer.innerHTML = `
+          <div class="quick-results-header">
+            <span class="badge-severity badge-Low" style="background: rgba(16, 185, 129, 0.15); color: #10b981; border-color: #10b981;">
+              ✓ Clean Code
+            </span>
+            <span style="font-weight: 700; color: #10b981; font-size: 13px;">Zero Defects Detected</span>
+          </div>
+          <div style="font-size: 13px; color: #e2e8f0; line-height: 1.5; margin-bottom: 12px;">
+            🎉 All static AST rules, Bandit security checks, and code complexity metrics passed cleanly!
+          </div>
+          <div class="quick-results-actions">
+            <a href="report.html?id=${submissionId}" class="btn btn-primary btn-sm" style="flex: 1;">
+              📊 View Full Audit Report &rarr;
+            </a>
+          </div>
+        `;
+        return;
+      }
+
+      const criticalCount = reportData.critical_count !== undefined
+        ? reportData.critical_count
+        : bugs.filter(b => b.severity === 'Critical').length;
+      const highCount = reportData.high_count !== undefined
+        ? reportData.high_count
+        : bugs.filter(b => b.severity === 'High').length;
+      const mediumCount = reportData.medium_count !== undefined
+        ? reportData.medium_count
+        : bugs.filter(b => b.severity === 'Medium').length;
+      const lowCount = reportData.low_count !== undefined
+        ? reportData.low_count
+        : bugs.filter(b => b.severity === 'Low').length;
+
+      const issueListHtml = bugs.map((b, idx) => {
+        const lineSnippet = getLineSnippet(sourceCode, b.line);
+        const sev = b.severity || 'Medium';
+        return `
+          <div class="quick-issue-item">
+            <div class="quick-issue-top">
+              <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+                ${renderSeverityBadge(sev)}
+                <span class="analysis-meta-tag" style="font-size: 11px;">Line ${b.line}${b.column ? `:${b.column}` : ''}</span>
+                <span class="analysis-meta-tag" style="font-size: 11px;">${escapeHtml(b.tool)}</span>
+              </div>
+              ${renderScorePill(b.severity_score)}
+            </div>
+            <div class="quick-issue-msg">${escapeHtml(b.message)}</div>
+            ${lineSnippet ? `
+              <pre class="quick-issue-snippet"><code>Line ${b.line}: ${escapeHtml(lineSnippet)}</code></pre>
+            ` : ''}
+            ${b.explanation ? `
+              <div class="quick-issue-fix">
+                💡 <strong>AI Guidance:</strong> ${escapeHtml(b.explanation.slice(0, 160))}${b.explanation.length > 160 ? '...' : ''}
+              </div>
+            ` : ''}
+          </div>
+        `;
+      }).join('');
+
+      resultsContainer.innerHTML = `
+        <div class="quick-results-header">
+          <div style="font-weight: 700; color: #ffffff; font-size: 14px;">
+            Scan Results: ${totalBugs} Issue${totalBugs === 1 ? '' : 's'} Found
+          </div>
+          ${criticalCount > 0 ? renderSeverityBadge('Critical') : (highCount > 0 ? renderSeverityBadge('High') : renderSeverityBadge('Medium'))}
+        </div>
+
+        <div class="quick-results-summary">
+          ${criticalCount > 0 ? `<span class="quick-summary-pill" style="background: rgba(244,63,94,0.2); color: var(--severity-critical); border: 1px solid rgba(244,63,94,0.4);">🔥 ${criticalCount} Critical</span>` : ''}
+          ${highCount > 0 ? `<span class="quick-summary-pill" style="background: rgba(249,115,22,0.2); color: var(--severity-high); border: 1px solid rgba(249,115,22,0.4);">⚠️ ${highCount} High</span>` : ''}
+          ${mediumCount > 0 ? `<span class="quick-summary-pill" style="background: rgba(234,179,8,0.2); color: var(--severity-medium); border: 1px solid rgba(234,179,8,0.4);">⚡ ${mediumCount} Medium</span>` : ''}
+          ${lowCount > 0 ? `<span class="quick-summary-pill" style="background: rgba(56,189,248,0.2); color: var(--severity-low); border: 1px solid rgba(56,189,248,0.4);">ℹ️ ${lowCount} Low</span>` : ''}
+        </div>
+
+        <div class="quick-issue-list">
+          ${issueListHtml}
+        </div>
+
+        <div class="quick-results-actions">
+          <a href="report.html?id=${submissionId}" class="btn btn-primary btn-sm" style="flex: 1;">
+            📊 Open Full Diagnostic View & Agentic Patching &rarr;
+          </a>
+        </div>
+      `;
+    }
+
+    function handleQuickScanError(err, sourceCode) {
+      const errData = err.errorData || {};
+      const errCode = errData.code || '';
+      const errMsg = errData.message || err.message || '';
+      const details = errData.details || {};
+
+      if (errCode === 'CODE_SYNTAX_ERROR') {
+        const line = details.line || 1;
+        const col = details.column || 0;
+        const text = details.text || getLineSnippet(sourceCode, line);
+        const syntaxMsg = details.message || errMsg || 'invalid syntax';
+        const formatted = `Python syntax error on line ${line}, column ${col}: ${syntaxMsg}`;
+
+        const { rootCause, fixGuidance } = generateSyntaxExplanations(syntaxMsg, text);
+
+        showQuickError({
+          type: 'syntax',
+          title: 'Python Syntax Error',
+          message: formatted,
+          line,
+          column: col,
+          codeSnippet: text,
+          rootCause,
+          fixGuidance,
+        });
+        showToast(formatted, 'error');
+      } else if (errCode === 'VALIDATION_ERROR' || err.status === 400) {
+        const msg = errMsg || 'Please enter Python code before running the scan.';
+        showQuickError({
+          type: 'validation',
+          title: 'Input Validation Notice',
+          message: msg,
+        });
+        showToast(msg, 'error');
+      } else if (err.name === 'TypeError' || (err.message && (err.message.includes('fetch') || err.message.includes('NetworkError') || err.message.includes('Failed to fetch')))) {
+        const msg = 'Unable to connect to the scan service. Please try again.';
+        showQuickError({
+          type: 'network',
+          title: 'Connection Error',
+          message: msg,
+          guidance: 'Please verify the FastAPI backend is running on http://127.0.0.1:8000 and network is reachable.',
+        });
+        showToast(msg, 'error');
+      } else if (err.status >= 500 || errCode === 'INTERNAL_SERVER_ERROR' || errCode === 'ANALYSIS_ERROR') {
+        const msg = 'The scan service encountered an error. Please try again.';
+        showQuickError({
+          type: 'server',
+          title: 'Scan Service Error',
+          message: msg,
+          guidance: errMsg,
+        });
+        showToast(msg, 'error');
+      } else if (err.message && err.message.includes('unexpected response')) {
+        const msg = 'The scan service returned an unexpected response.';
+        showQuickError({
+          type: 'unexpected',
+          title: 'Unexpected Response',
+          message: msg,
+        });
+        showToast(msg, 'error');
+      } else {
+        const msg = errMsg || 'The scan service encountered an error. Please try again.';
+        showQuickError({
+          type: 'general',
+          title: 'Scan Error',
+          message: msg,
+        });
+        showToast(msg, 'error');
+      }
+    }
+
+    const langSelect = document.getElementById('quick-lang-select');
+
+    const EXT_MAP = {
+      'Python': 'quick_snippet.py',
+      'C': 'quick_snippet.c',
+      'C++': 'quick_snippet.cpp',
+      'Java': 'QuickSnippet.java',
+      'JavaScript': 'quick_snippet.js',
+      'TypeScript': 'quick_snippet.ts',
+      'Go': 'quick_snippet.go',
+      'Rust': 'quick_snippet.rs',
+      'C#': 'QuickSnippet.cs',
+      'PHP': 'quick_snippet.php',
+      'Ruby': 'quick_snippet.rb',
+      'SQL': 'quick_snippet.sql',
+      'Shell': 'quick_snippet.sh',
+    };
+
+    function detectSnippetLanguage(text) {
+      const t = text.trim();
+      if (t.includes('#include <iostream>') || t.includes('std::cout') || t.includes('std::vector') || t.includes('namespace ')) return 'C++';
+      if (t.includes('#include <stdio.h>') || t.includes('#include <stdlib.h>') || /\b(printf|malloc|free|scanf)\b/.test(t)) return 'C';
+      if (/\b(public\s+class|System\.out\.println|import\s+java\.)\b/.test(t)) return 'Java';
+      if (/\b(package\s+main|func\s+main|fmt\.Println)\b/.test(t)) return 'Go';
+      if (/\b(fn\s+main|let\s+mut|println!)\b/.test(t)) return 'Rust';
+      if (/\b(using\s+System|Console\.WriteLine|namespace\s+)\b/.test(t)) return 'C#';
+      if (t.startsWith('<?php') || /\b(echo\s+\$|\$this->)\b/.test(t)) return 'PHP';
+      if (/\b(console\.log|const\s+\w+\s*=|let\s+\w+\s*=|function\s+\w+)\b/.test(t)) return 'JavaScript';
+      if (/\b(def\s+\w+\(|import\s+\w+|print\(|class\s+\w+:)\b/.test(t)) return 'Python';
+      return 'Python';
+    }
+
+    // Quick scan handler
+    quickBtn.addEventListener('click', async () => {
+      const rawInput = quickArea.value;
+      if (!rawInput || !rawInput.trim()) {
+        const msg = 'Please enter source code before running the scan.';
+        showQuickError({
+          type: 'validation',
+          title: 'Input Required',
+          message: msg,
+        });
+        showToast(msg, 'error');
+        return;
+      }
+
+      let chosenLang = langSelect ? langSelect.value : 'auto';
+      if (chosenLang === 'auto') {
+        chosenLang = detectSnippetLanguage(rawInput);
+      }
+
+      const filename = EXT_MAP[chosenLang] || 'quick_snippet.py';
+      const code = (chosenLang === 'Python') ? normalizePythonCode(rawInput) : rawInput.trim();
+
+      hideQuickError();
+      hideQuickResults();
+
+      quickBtn.disabled = true;
+      quickBtn.innerHTML = `<span class="spinner"></span> Scanning ${chosenLang}...`;
+
+      try {
+        const uploadRes = await apiRequest('/upload', {
+          method: 'POST',
+          body: JSON.stringify({ filename, code, language: chosenLang }),
+          suppressToast: true,
+        });
+
+        if (!uploadRes || !uploadRes.id) {
+          throw new Error('The scan service returned an unexpected response.');
+        }
+
+        const submissionId = uploadRes.id;
+
+        // Run full static and multi-language analysis pipeline
+        await apiRequest(`/analysis/${submissionId}/run`, {
+          method: 'POST',
+          suppressToast: true,
+        });
+
+        // Retrieve structured bug report
+        const bugReport = await apiRequest(`/bugs/${submissionId}`, {
+          suppressToast: true,
+        });
+
+        if (!bugReport) {
+          throw new Error('The scan service returned an unexpected response.');
+        }
+
+        // Render results inside widget
+        renderQuickResults(bugReport, code);
+        showToast(`Scan complete (${chosenLang}): ${bugReport.total_bugs} issue${bugReport.total_bugs === 1 ? '' : 's'} detected`, 'success');
+
+        // Refresh Recent Code Analyses table
+        loadDashboard();
+      } catch (err) {
+        handleQuickScanError(err, code);
+      } finally {
+        quickBtn.disabled = false;
+        quickBtn.innerHTML = 'Run Instant Multi-Language Scan';
+      }
+    });
+
+    loadDashboard();
+  </script>
+</body>
+
+</html>

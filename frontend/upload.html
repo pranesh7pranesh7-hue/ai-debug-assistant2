@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BugSense AI — Code Upload & Ingestion</title>
+  <link rel="stylesheet" href="assets/css/base.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+</head>
+
+<body>
+  <!-- Navigation Header -->
+  <nav class="navbar">
+    <div class="app-container nav-wrapper">
+      <a href="index.html" class="brand">
+        <div class="brand-icon">🛡️</div>
+        <span>BugSense AI</span>
+      </a>
+      <ul class="nav-links">
+        <li class="nav-item"><a href="index.html">Dashboard</a></li>
+        <li class="nav-item"><a href="upload.html" class="active">Upload Code</a></li>
+        <li class="nav-item"><a href="history.html">History</a></li>
+        <li class="nav-item"><a href="javascript:void(0)" id="logout-link"
+            style="color: var(--severity-critical);">Logout</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main class="main-content">
+    <div class="app-container" style="max-width: 1000px;">
+
+      <div style="margin-bottom: 24px;">
+        <h2>Code Upload & Analysis Module</h2>
+        <p style="color: var(--text-secondary); font-size: 14px;">
+          Submit code or a project ZIP. BugSense AI will run static AST analyzers, OWASP security rules, and
+          prioritize all findings.
+        </p>
+      </div>
+
+      <div class="card">
+
+        <!-- Preset Dropdown & File selector bar -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin-bottom: 18px;">
+          <div>
+            <label class="form-label" for="lang-select">Programming Language</label>
+            <select id="lang-select" class="form-select">
+              <option value="auto">🌐 Auto-Detect</option>
+              <option value="Python">🐍 Python</option>
+              <option value="C">🇨 C</option>
+              <option value="C++">➕ C++</option>
+              <option value="Java">☕ Java</option>
+              <option value="JavaScript">🟨 JavaScript</option>
+              <option value="TypeScript">🔷 TypeScript</option>
+              <option value="Go">🐹 Go</option>
+              <option value="Rust">🦀 Rust</option>
+              <option value="C#">🔷 C#</option>
+              <option value="PHP">🐘 PHP</option>
+              <option value="Ruby">💎 Ruby</option>
+              <option value="SQL">🗄️ SQL</option>
+              <option value="Shell">🐚 Shell / Bash</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="form-label" for="preset-select">Load Bug Scenario Preset</label>
+            <select id="preset-select" class="form-select">
+              <option value="">-- Choose a Multi-Language Preset --</option>
+              <optgroup label="🐍 Python">
+                <option value="mutable_default">Mutable Default Argument Leak</option>
+                <option value="undefined_var">Undefined Variable Reference</option>
+                <option value="resource_leak">Unclosed File Resource Leak</option>
+                <option value="sql_injection">Critical SQL Injection Flaw</option>
+                <option value="off_by_one">Off-by-One Range Flaw</option>
+              </optgroup>
+              <optgroup label="🇨 C & C++">
+                <option value="c_buffer_overflow">C: Buffer Overflow & gets()</option>
+                <option value="cpp_memory_leak">C++: Raw Pointer Leak & Missing Delete</option>
+              </optgroup>
+              <optgroup label="☕ Java">
+                <option value="java_resource_leak">Java: Unclosed FileInputStream</option>
+                <option value="java_string_equality">Java: String == Equality Bug</option>
+              </optgroup>
+              <optgroup label="🟨 JavaScript">
+                <option value="js_eval_injection">JS: Unsafe eval() Code Execution</option>
+              </optgroup>
+            </select>
+          </div>
+
+          <div>
+            <label class="form-label" for="filename-input">Target Filename</label>
+            <input type="text" id="filename-input" class="form-input" value="service.py"
+              placeholder="e.g. main.c, Service.java, app.py" />
+          </div>
+        </div>
+
+        <!-- Drag & Drop Zone -->
+        <div id="drop-zone"
+          style="border: 2px dashed var(--border-subtle); border-radius: var(--radius-md); padding: 24px; text-align: center; margin-bottom: 20px; background: rgba(14, 19, 31, 0.4); cursor: pointer;">
+          <div style="font-size: 28px; margin-bottom: 8px;">📁</div>
+          <div style="font-weight: 600; font-size: 14px;">Drag & Drop your source code or .zip file here</div>
+          <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">or click to browse local files (max
+            2MB)</div>
+          <input type="file" id="file-picker" accept=".py,.js,.ts,.jsx,.tsx,.c,.cpp,.h,.hpp,.java,.go,.rb,.php,.cs,.rs,.zip" style="display: none;" />
+        </div>
+
+        <!-- ZIP Archive Multi-File Preview Bar (Hidden by default) -->
+        <div id="zip-preview-bar" class="card" style="display: none; background: rgba(30, 41, 59, 0.7); border: 1px solid var(--border-subtle); padding: 14px 18px; margin-bottom: 18px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <span style="font-size: 20px;">📦</span>
+              <div>
+                <div id="zip-archive-title" style="font-weight: 600; font-size: 14px; color: #ffffff;">Archive Extracted</div>
+                <div id="zip-archive-subtitle" style="font-size: 12px; color: var(--text-secondary);">Select a file below to preview and analyze</div>
+              </div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px; min-width: 240px;">
+              <label for="zip-file-select" style="font-size: 12px; color: var(--text-secondary); white-space: nowrap;">Active File:</label>
+              <select id="zip-file-select" class="form-select" style="font-size: 13px; padding: 6px 12px;"></select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Raw Code Textarea -->
+        <div class="form-group">
+          <label class="form-label" for="code-input">Source Code</label>
+          <textarea id="code-input" class="form-textarea" rows="14"
+            placeholder="Paste your source code here..."></textarea>
+        </div>
+
+        <!-- Submit Button -->
+        <button id="submit-upload-btn" class="btn btn-primary" style="width: 100%; padding: 14px; font-size: 15px;">
+          Analyze Code with BugSense AI
+        </button>
+
+      </div>
+
+      <!-- Dedicated Analysis Results Section -->
+      <section id="analysis-results-section" class="analysis-results-wrapper" style="display: none;">
+        <div class="analysis-results-header">
+          <h3>
+            <span>🔍 Analysis Results</span>
+            <span id="results-count-badge" class="badge-severity badge-Info" style="display: none;">0 Issues</span>
+          </h3>
+          <div id="results-action-buttons" style="display: flex; gap: 10px;"></div>
+        </div>
+
+        <div id="analysis-results-content">
+          <!-- Dynamic Results Cards / Loading / Errors will be rendered here -->
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+
+  <footer class="footer">
+    <div class="app-container">
+      BugSense AI — Automated Code Debugging & Agentic Patching Assistant
+    </div>
+  </footer>
+
+  <script type="module">
+    import { logout } from './assets/js/auth.js';
+    import { initUploadPage } from './assets/js/upload.js';
+
+    document.getElementById('logout-link').addEventListener('click', logout);
+    document.getElementById('drop-zone').addEventListener('click', () => {
+      document.getElementById('file-picker').click();
+    });
+
+    initUploadPage();
+  </script>
+</body>
+
+</html>

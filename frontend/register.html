@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BugSense AI — Developer Registration</title>
+  <link rel="stylesheet" href="assets/css/base.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+</head>
+<body>
+  <div style="min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px;">
+    <div class="card" style="max-width: 420px; width: 100%;">
+      <div style="text-align: center; margin-bottom: 24px;">
+        <div style="display: inline-flex; width: 48px; height: 48px; background: linear-gradient(135deg, var(--accent-primary), var(--accent-cyan)); border-radius: 12px; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 12px;">
+          🛡️
+        </div>
+        <h2>Create BugSense Account</h2>
+        <p style="color: var(--text-secondary); font-size: 14px; margin-top: 4px;">Get instant AI bug detection & autonomous patching</p>
+      </div>
+
+      <form id="register-form">
+        <div class="form-group">
+          <label class="form-label" for="reg-email">Work Email</label>
+          <input type="email" id="reg-email" class="form-input" placeholder="developer@company.com" required />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="reg-password">Password (min 6 characters)</label>
+          <input type="password" id="reg-password" class="form-input" placeholder="••••••••" required minlength="6" />
+        </div>
+
+        <button type="submit" id="reg-btn" class="btn btn-primary" style="width: 100%; margin-top: 10px;">
+          Create Free Account
+        </button>
+      </form>
+
+      <div style="text-align: center; margin-top: 20px; font-size: 13px; color: var(--text-muted);">
+        Already registered? <a href="login.html">Sign in instead</a>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { register } from './assets/js/auth.js';
+    const form = document.getElementById('register-form');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('reg-email').value;
+      const password = document.getElementById('reg-password').value;
+      const btn = document.getElementById('reg-btn');
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner"></span> Creating account...';
+      try {
+        await register(email, password);
+      } catch (err) {
+        btn.disabled = false;
+        btn.innerHTML = 'Create Free Account';
+      }
+    });
+  </script>
+</body>
+</html>

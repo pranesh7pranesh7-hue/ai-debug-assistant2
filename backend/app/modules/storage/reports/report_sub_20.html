@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BugSense AI Analysis Audit Report - SyntaxErrorDemo.java</title>
+    <style>
+        :root {
+            --bg-primary: #0f172a;
+            --bg-card: #1e293b;
+            --text-primary: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+            --accent: #6366f1;
+            --critical: #ef4444;
+            --high: #f97316;
+            --medium: #eab308;
+            --low: #3b82f6;
+            --info: #64748b;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f8fafc;
+            color: #0f172a;
+            margin: 0;
+            padding: 30px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        .header {
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header h1 {
+            margin: 0;
+            color: #1e293b;
+            font-size: 26px;
+        }
+        .meta-pill {
+            background: #e0e7ff;
+            color: #4338ca;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        .stat-box {
+            background: #f1f5f9;
+            padding: 16px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+        }
+        .stat-val {
+            font-size: 28px;
+            font-weight: 700;
+            color: #0f172a;
+        }
+        .stat-label {
+            font-size: 12px;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 4px;
+        }
+        .section-title {
+            font-size: 20px;
+            color: #1e293b;
+            margin-top: 30px;
+            margin-bottom: 16px;
+            border-left: 4px solid var(--accent);
+            padding-left: 10px;
+        }
+        .bug-card {
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 18px;
+            margin-bottom: 15px;
+            background: #ffffff;
+        }
+        .bug-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .badge {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 700;
+            color: #ffffff;
+        }
+        .badge-Critical { background-color: var(--critical); }
+        .badge-High { background-color: var(--high); }
+        .badge-Medium { background-color: var(--medium); color: #000; }
+        .badge-Low { background-color: var(--low); }
+        .badge-Info { background-color: var(--info); }
+
+        pre {
+            background: #1e293b;
+            color: #f8fafc;
+            padding: 14px;
+            border-radius: 6px;
+            font-size: 13px;
+            overflow-x: auto;
+        }
+        .diff-text {
+            background: #0f172a;
+            color: #a5f3fc;
+            padding: 12px;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 12px;
+            white-space: pre-wrap;
+        }
+        .footer {
+            margin-top: 40px;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 15px;
+            text-align: center;
+            font-size: 12px;
+            color: #94a3b8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div>
+                <h1>🛡️ BugSense AI Analysis Report</h1>
+                <div style="color: #64748b; font-size: 14px; margin-top: 4px;">File: <strong>SyntaxErrorDemo.java</strong> &bull; Generated: 2026-08-27 17:59:15 UTC</div>
+            </div>
+            <div class="meta-pill">Submission #20</div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-box">
+                <div class="stat-val">2</div>
+                <div class="stat-label">Total Bugs</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-val" style="color: var(--critical);">0</div>
+                <div class="stat-label">Critical Issues</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-val" style="color: #10b981;">0</div>
+                <div class="stat-label">Auto-Fixed</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-val">2.5</div>
+                <div class="stat-label">Avg Complexity</div>
+            </div>
+        </div>
+
+        <div class="section-title">Detected Bugs & AI Diagnostics</div>
+        
+        <div class="bug-card">
+            <div class="bug-card-header">
+                <div>
+                    <span class="badge badge-Low">Low</span>
+                    <strong style="margin-left: 8px;">Line 3</strong> &bull; <span style="color: #64748b;">JAVA-SYNTAX-SEMICOLON (java_syntax_checker)</span>
+                </div>
+                <div style="font-weight: 600; color: #475569;">Score: 35.0/100</div>
+            </div>
+            <div style="font-size: 14px; margin-bottom: 8px;"><strong>Issue:</strong> Syntax Error: Missing semicolon ';' at end of statement.</div>
+            
+            <div style="background: #f8fafc; border-left: 3px solid #6366f1; padding: 10px; border-radius: 4px; font-size: 13px; color: #334155; margin-top: 8px;">
+                <strong>AI Root Cause Analysis:</strong><br/>
+                ### Root Cause Analysis<br/>In Java, every statement (variable declarations, expressions, method calls, returns) must terminate with a semicolon (`;`).<br/><br/>### Runtime Impact<br/>The Java compiler (`javac`) will fail to parse the token stream and produce a compilation error, preventing execution.<br/><br/>### Recommended Fix<br/>Append a semicolon (`;`) at the end of the statement line.
+            </div>
+            
+        </div>
+        
+        <div class="bug-card">
+            <div class="bug-card-header">
+                <div>
+                    <span class="badge badge-Low">Low</span>
+                    <strong style="margin-left: 8px;">Line 12</strong> &bull; <span style="color: #64748b;">JAVA-SYNTAX-BRACES (java_syntax_checker)</span>
+                </div>
+                <div style="font-weight: 600; color: #475569;">Score: 35.0/100</div>
+            </div>
+            <div style="font-size: 14px; margin-bottom: 8px;"><strong>Issue:</strong> Syntax Error: Unbalanced curly braces. Found 4 '{' and 3 '}'.</div>
+            
+            <div style="background: #f8fafc; border-left: 3px solid #6366f1; padding: 10px; border-radius: 4px; font-size: 13px; color: #334155; margin-top: 8px;">
+                <strong>AI Root Cause Analysis:</strong><br/>
+                ### Root Cause Analysis<br/>Unbalanced braces in Java source: Syntax Error: Unbalanced curly braces. Found 4 '{' and 3 '}'.. Every opening curly brace `{` must have a corresponding closing brace `}`.<br/><br/>### Runtime Impact<br/>The compiler reaches end of file prematurely while parsing and throws a fatal compilation error (`reached end of file while parsing`).<br/><br/>### Recommended Fix<br/>Check class and method indentation, ensuring all opening braces are properly closed.
+            </div>
+            
+        </div>
+        
+
+        
+
+        <div class="footer">
+            Generated autonomously by BugSense AI LLM-Based Automated Code Debugging Assistant
+        </div>
+    </div>
+</body>
+</html>
