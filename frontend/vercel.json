@@ -1,0 +1,9 @@
+{
+  "version": 2,
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "https://ai-debug-assistant2.onrender.com/api/:path*"
+    }
+  ]
+}
