@@ -26,6 +26,15 @@ async def lifespan(app: FastAPI):
     setup_logging(debug=settings.DEBUG)
     # Ensure tables exist (Alembic or direct metadata for sqlite dev)
     Base.metadata.create_all(bind=engine)
+
+    # Auto-seed initial demo user & sample bug data on first boot
+    try:
+        from app.seed_demo import seed
+        await seed()
+    except Exception as e:
+        import logging
+        logging.getLogger("bugsense").warning("Startup database seed skipped: %s", str(e))
+
     yield
 
 
