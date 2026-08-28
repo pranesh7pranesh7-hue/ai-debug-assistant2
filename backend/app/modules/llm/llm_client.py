@@ -138,8 +138,9 @@ class LLMClient:
         try:
             import google.generativeai as genai
             genai.configure(api_key=self.settings.GEMINI_API_KEY)
+            model_name = self.model if (self.model and "gemini" in self.model.lower()) else "gemini-1.5-flash"
             model = genai.GenerativeModel(
-                model_name=self.model or "gemini-1.5-flash",
+                model_name=model_name,
                 system_instruction=system if system else None,
             )
             response = await model.generate_content_async(
