@@ -142,10 +142,17 @@ def validate_and_apply_patch(
         return False, None, "Patched code is empty."
 
     if language.strip().lower() == "python":
+        orig_had_syntax_error = False
+        try:
+            ast.parse(original_code)
+        except SyntaxError:
+            orig_had_syntax_error = True
+
         try:
             ast.parse(patched_code)
         except SyntaxError as e:
-            return False, None, f"Patched code introduced a Python syntax error on line {e.lineno}: {e.msg}"
+            if not orig_had_syntax_error:
+                return False, None, f"Patched code introduced a Python syntax error on line {e.lineno}: {e.msg}"
 
     diff_text = create_unified_diff(original_code, patched_code, filename=filename)
     if not diff_text.strip():

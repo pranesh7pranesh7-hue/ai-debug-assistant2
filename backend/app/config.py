@@ -1,5 +1,6 @@
 """Application Configuration Settings via Pydantic Settings."""
 from functools import lru_cache
+import json
 from typing import List, Union
 from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -46,17 +47,18 @@ class Settings(BaseSettings):
     @field_validator("CORS_ORIGINS", mode="before")
     @classmethod
     def assemble_cors_origins(cls, v: Union[str, List[str]]) -> List[str]:
+        """Parse and normalize CORS origin configurations."""
         if isinstance(v, str):
-            if v.strip().startswith("[") and v.strip().endswith("]"):
-                import json
+            trimmed = v.strip()
+            if trimmed.startswith("[") and trimmed.endswith("]"):
                 try:
-                    res = json.loads(v)
+                    res = json.loads(trimmed)
                     if isinstance(res, list):
                         return res
-                except Exception:
+                except (json.JSONDecodeError, ValueError):
                     pass
             return [i.strip() for i in v.split(",") if i.strip()]
-        elif isinstance(v, list):
+        if isinstance(v, list):
             return v
         return ["*"]
 
